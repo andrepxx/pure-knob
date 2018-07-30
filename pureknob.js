@@ -27,6 +27,255 @@
 function PureKnob() {
 	
 	/*
+	 * Creates a bar graph element.
+	 */
+	this.createBarGraph = function(width, height) {
+		var heightString = height.toString();
+		var widthString = width.toString();
+		var canvas = document.createElement('canvas');
+		var div = document.createElement('div');
+		div.style.display = 'inline-block';
+		div.style.height = heightString + 'px';
+		div.style.position = 'relative';
+		div.style.textAlign = 'center';
+		div.style.width = widthString + 'px';
+		div.appendChild(canvas);
+		
+		/*
+		 * The bar graph object.
+		 */
+		var graph = {
+			'_canvas': canvas,
+			'_div': div,
+			'_height': height,
+			'_width': width,
+			
+			/*
+			 * Properties of this bar graph.
+			 */
+			'_properties': {
+				'colorBG': '#181818',
+				'colorFG': '#ff8800',
+				'colorMarkers': '#888888',
+				'markerStart': 0,
+				'markerEnd': 100,
+				'markerStep': 20,
+				'trackWidth': 0.5,
+				'valMin': 0,
+				'valMax': 100,
+				'valPeaks': [],
+				'val': 0
+			},
+			
+			/*
+			 * Returns the peak values for this bar graph.
+			 */
+			'getPeaks': function() {
+				var properties = this._properties;
+				var peaks = properties.valPeaks;
+				var numPeaks = peaks.length;
+				var peaksCopy = [];
+				
+				/*
+				 * Iterate over the peak values and copy them.
+				 */
+				for (var i = 0; i < numPeaks; i++) {
+					var peak = peaks[i];
+					peaksCopy.push(peak);
+				}
+				
+				return peaksCopy;
+			},
+			
+			/*
+			 * Returns the value of a property of this bar graph.
+			 */
+			'getProperty': function(key) {
+				var properties = this._properties;
+				var value = properties[key];
+				return value;
+			},
+			
+			/*
+			 * Returns the current value of the bar graph.
+			 */
+			'getValue': function() {
+				var properties = this._properties;
+				var value = properties.val;
+				return value;
+			},
+			
+			/*
+			 * Return the DOM node representing this bar graph.
+			 */
+			'node': function() {
+				var div = this._div;
+				return div;
+			},
+			
+			/*
+			 * Redraw the bar graph on the canvas.
+			 */
+			'redraw': function() {
+				this.resize();
+				var properties = this._properties;
+				var colorTrack = properties.colorBG;
+				var colorFilling = properties.colorFG;
+				var colorMarkers = properties.colorMarkers;
+				var markerStart = properties.markerStart;
+				var markerEnd = properties.markerEnd;
+				var markerStep = properties.markerStep;
+				var trackWidth = properties.trackWidth;
+				var valMin = properties.valMin;
+				var valMax = properties.valMax;
+				var peaks = properties.valPeaks;
+				var value = properties.val;
+				var height = this._height;
+				var width = this._width;
+				var lineWidth = Math.round(trackWidth * height);
+				var halfWidth = 0.5 * lineWidth;
+				var centerY = 0.5 * height;
+				var lineTop = centerY - halfWidth;
+				var lineBottom = centerY + halfWidth;
+				var relativeValue = (value - valMin) / (valMax - valMin);
+				var fillingEnd = width * relativeValue;
+				var numPeaks = peaks.length;
+				var canvas = this._canvas;
+				var ctx = canvas.getContext('2d');
+				
+				/*
+				 * Clear the canvas.
+				 */
+				ctx.clearRect(0, 0, width, height);
+				
+				/*
+				 * Check if markers should be drawn.
+				 */
+				if ((markerStart !== null) & (markerEnd !== null) & (markerStep !== null) & (markerStep !== 0)) {
+					
+					/*
+					 * Draw the markers.
+					 */
+					for (var v = markerStart; v <= markerEnd; v += markerStep) {
+						var relativePos = (v - valMin) / (valMax - valMin);
+						var pos = Math.round(width * relativePos);
+						ctx.beginPath();
+						ctx.moveTo(pos, 0);
+						ctx.lineTo(pos, height);
+						ctx.lineCap = 'butt';
+						ctx.lineWidth = '2';
+						ctx.strokeStyle = colorMarkers;
+						ctx.stroke();
+					}
+					
+				}
+				
+				/*
+				 * Draw the track.
+				 */
+				ctx.beginPath();
+				ctx.rect(0, lineTop, width, lineWidth);
+				ctx.fillStyle = colorTrack;
+				ctx.fill();
+				
+				/*
+				 * Draw the filling.
+				 */
+				ctx.beginPath();
+				ctx.rect(0, lineTop, fillingEnd, lineWidth);
+				ctx.fillStyle = colorFilling;
+				ctx.fill();
+				
+				/*
+				 * Draw the peaks.
+				 */
+				for (var i = 0; i < numPeaks; i++) {
+					var peak = peaks[i];
+					var relativePeak = (peak - valMin) / (valMax - valMin);
+					var pos = Math.round(width * relativePeak);
+					ctx.beginPath();
+					ctx.moveTo(pos, lineTop);
+					ctx.lineTo(pos, lineBottom);
+					ctx.lineCap = 'butt';
+					ctx.lineWidth = '2';
+					ctx.strokeStyle = colorFilling;
+					ctx.stroke();
+				}
+				
+			},
+			
+			/*
+			 * This is called as the canvas or the surrounding DIV is resized.
+			 */
+			'resize': function() {
+				var canvas = this._canvas;
+				canvas.style.height = '100%';
+				canvas.style.width = '100%';
+				canvas.height = this._height;
+				canvas.width = this._width;
+			},
+			
+			/*
+			 * Sets the peak values of this bar graph.
+			 */
+			'setPeaks': function(peaks) {
+				var properties = this._properties;
+				var peaksCopy = [];
+				var numPeaks = peaks.length;
+				
+				/*
+				 * Iterate over the peak values and append them to the array.
+				 */
+				for (var i = 0; i < numPeaks; i++) {
+					var peak = peaks[i];
+					peaksCopy.push(peak);
+				}
+				
+				this.setProperty('valPeaks', peaksCopy);
+			},
+			
+			/*
+			 * Sets the value of a property of this bar graph.
+			 */
+			'setProperty': function(key, value) {
+				this._properties[key] = value;
+				this.redraw();
+			},
+			
+			/*
+			 * Sets the value of this bar graph.
+			 */
+			'setValue': function(value) {
+				var properties = this._properties;
+				var valMin = properties.valMin;
+				var valMax = properties.valMax;
+				
+				/*
+				 * Clamp the actual value into the [valMin; valMax] range.
+				 */
+				if (value < valMin)
+					value = valMin;
+				else if (value > valMax)
+					value = valMax;
+				
+				value = Math.round(value);
+				this.setProperty('val', value);
+			}
+			
+		};
+		
+		/*
+		 * This is called when the size of the canvas changes.
+		 */
+		var resizeListener = function(e) {
+			graph.redraw();
+		};
+		
+		canvas.addEventListener('resize', resizeListener);
+		return graph;
+	}
+	
+	/*
 	 * Creates a knob element.
 	 */
 	this.createKnob = function(width, height) {
@@ -154,7 +403,9 @@ function PureKnob() {
 			 * Returns the value of a property of this knob.
 			 */
 			'getProperty': function(key) {
-				return this._properties[key];
+				var properties = this._properties;
+				var value = properties[key];
+				return value;
 			},
 			
 			/*
