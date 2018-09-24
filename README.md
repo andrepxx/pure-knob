@@ -7,6 +7,9 @@ In addition, this script can also render (linear) bar graphs.
 - Canvas-based, no image files required.
 - Mouse, wheel, touch and keyboard controls.
 
+pure-knob as generated in [index.xhtml](index.xhtml):  
+![pure-knob as generated in index.xhtml](pure-knob.png)
+
 Example for knob control
 ------------------------
 
@@ -120,4 +123,3 @@ Properties
 - `val`: Default value. (Do not edit directly! Use `setValue(...)` to set this.)
 
 There is also a small sample provided for the bar graph control in the `index.xhtml` file.
-
