@@ -7,8 +7,9 @@ In addition, this script can also render (linear) bar graphs.
 - Canvas-based, no image files required.
 - Mouse, wheel, touch and keyboard controls.
 
-pure-knob as generated in [index.xhtml](index.xhtml):  
-![pure-knob as generated in index.xhtml](pure-knob.png)
+pure-knob as generated in [index.xhtml](index.xhtml):
+
+![pure-knob as generated in index.xhtml](doc/pure-knob.png)
 
 Example for knob control
 ------------------------
