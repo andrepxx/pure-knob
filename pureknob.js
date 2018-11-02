@@ -604,6 +604,76 @@ function PureKnob() {
 		};
 		
 		/*
+		 * Convert touch event to value.
+		 */
+		var touchEventToValue = function(e, properties) {
+			var canvas = e.target;
+			var rect = canvas.getBoundingClientRect();
+			var offsetX = rect.left;
+			var offsetY = rect.top;
+			var width = canvas.scrollWidth;
+			var height = canvas.scrollHeight;
+			var centerX = 0.5 * width;
+			var centerY = 0.5 * height;
+			var touches = e.targetTouches;
+			var touch = null;
+			
+			/*
+			 * If there are touches, extract the first one.
+			 */
+			if (touches.length > 0)
+				touch = touches.item(0);
+			
+			var x = 0.0;
+			var y = 0.0;
+			
+			/*
+			 * If a touch was extracted, calculate coordinates relative to
+			 * the element position.
+			 */
+			if (touch !== null) {
+				var touchX = touch.pageX;
+				x = touchX - offsetX;
+				var touchY = touch.pageY;
+				y = touchY - offsetY;
+			}
+			
+			var relX = x - centerX;
+			var relY = y - centerY;
+			var angleStart = properties.angleStart;
+			var angleEnd = properties.angleEnd;
+			var angleDiff = angleEnd - angleStart;
+			var angle = Math.atan2(relX, -relY) - angleStart;
+			var twoPi = 2.0 * Math.PI;
+			
+			/*
+			 * Make negative angles positive.
+			 */
+			if (angle < 0) {
+				
+				if (angleDiff >= twoPi)
+					angle += twoPi;
+				else
+					angle = 0;
+				
+			}
+
+			var valMin = properties.valMin;
+			var valMax = properties.valMax;
+			var value = ((angle / angleDiff) * (valMax - valMin)) + valMin;
+			
+			/*
+			 * Clamp values into valid interval.
+			 */
+			if (value < valMin)
+				value = valMin;
+			else if (value > valMax)
+				value = valMax;
+			
+			return value;
+		};
+		
+		/*
 		 * Show input element on double click.
 		 */
 		var doubleClickListener = function(e) {
@@ -742,6 +812,126 @@ function PureKnob() {
 		};
 		
 		/*
+		 * This is called when a user touches the element.
+		 */
+		var touchStartListener = function(e) {
+			var properties = knob._properties;
+			var readonly = properties.readonly;
+		
+			/*
+			 * If knob is not read-only, process touch event.
+			 */
+			if (!readonly) {
+				var touches = e.touches;
+				var numTouches = touches.length;
+				var singleTouch = (numTouches == 1);
+				
+				/*
+				 * Only process single touches, not multi-touch
+				 * gestures.
+				 */
+				if (singleTouch) {
+					knob._mousebutton = true;
+					var val = touchEventToValue(e, properties);
+					knob.setValueFloating(val);
+				}
+				
+			}
+			
+		};
+		
+		/*
+		 * This is called when a user moves a finger on the element.
+		 */
+		var touchMoveListener = function(e) {
+			var btn = knob._mousebutton;
+			
+			/*
+			 * Only process event, if mouse button is depressed.
+			 */
+			if (btn) {
+				var properties = knob._properties;
+				var readonly = properties.readonly;
+			
+				/*
+				 * If knob is not read-only, process touch event.
+				 */
+				if (!readonly) {
+					var touches = e.touches;
+					var numTouches = touches.length;
+					var singleTouch = (numTouches == 1);
+					
+					/*
+					 * Only process single touches, not multi-touch
+					 * gestures.
+					 */
+					if (singleTouch) {
+						e.preventDefault();
+						var val = touchEventToValue(e, properties);
+						knob.setValueFloating(val);
+					}
+					
+				}
+				
+			}
+			
+		};
+		
+		/*
+		 * This is called when a user lifts a finger off the element.
+		 */
+		var touchEndListener = function(e) {
+			var btn = knob._mousebutton;
+			
+			/*
+			 * Only process event, if mouse button was depressed.
+			 */
+			if (btn) {
+				var properties = knob._properties;
+				var readonly = properties.readonly;
+			
+				/*
+				 * If knob is not read only, process touch event.
+				 */
+				if (!readonly) {					
+					var touches = e.touches;
+					var numTouches = touches.length;
+					var singleTouch = (numTouches == 1);
+					
+					/*
+					 * Only process single touches, not multi-touch
+					 * gestures.
+					 */
+					if (singleTouch) {
+						e.preventDefault();
+						knob._mousebutton = false;
+						knob.commit();
+					}
+					
+				}
+				
+			}
+			
+			knob._mousebutton = false;
+		};
+		
+		/*
+		 * This is called when a user cancels a touch action.
+		 */
+		var touchCancelListener = function(e) {
+			var btn = knob._mousebutton;
+			
+			/*
+			 * Abort action if mouse button was depressed.
+			 */
+			if (btn) {
+				knob.abort();
+				knob._mousebutton = false;
+			}
+			
+		};
+		
+		/*
 		 * This is called when the size of the canvas changes.
 		 */
 		var resizeListener = function(e) {
@@ -821,10 +1011,10 @@ function PureKnob() {
 		canvas.addEventListener('mousemove', mouseMoveListener);
 		canvas.addEventListener('mouseup', mouseUpListener);
 		canvas.addEventListener('resize', resizeListener);
-		canvas.addEventListener('touchstart', mouseDownListener);
-		canvas.addEventListener('touchmove', mouseMoveListener);
-		canvas.addEventListener('touchend', mouseUpListener);
-		canvas.addEventListener('touchcancel', mouseCancelListener);
+		canvas.addEventListener('touchstart', touchStartListener);
+		canvas.addEventListener('touchmove', touchMoveListener);
+		canvas.addEventListener('touchend', touchEndListener);
+		canvas.addEventListener('touchcancel', touchCancelListener);
 		canvas.addEventListener('wheel', scrollListener);
 		input.addEventListener('keypress', keyPressListener);
 		return knob;
