@@ -293,6 +293,7 @@ function PureKnob() {
 		div.style.width = widthString + 'px';
 		div.appendChild(canvas);
 		var input = document.createElement('input');
+		input.style.appearance = 'textfield';
 		input.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
 		input.style.border = 'none';
 		input.style.color = '#ff8800';
@@ -303,6 +304,9 @@ function PureKnob() {
 		input.style.padding = '0px';
 		input.style.textAlign = 'center';
 		input.style.width = widthString + 'px';
+		var inputMode = document.createAttribute('inputmode');
+		inputMode.value = 'numeric';
+		input.setAttributeNode(inputMode);
 		var inputDiv = document.createElement('div');
 		inputDiv.style.bottom = '0px';
 		inputDiv.style.display = 'none';
@@ -326,6 +330,8 @@ function PureKnob() {
 			'_mousebutton': false,
 			'_previousVal': 0,
 			'_timeout': null,
+			'_timeoutDoubleTap': null,
+			'_touchCount': 0,
 			'_width': width,
 			
 			/*
@@ -832,6 +838,52 @@ function PureKnob() {
 				 */
 				if (singleTouch) {
 					knob._mousebutton = true;
+					
+					/*
+					 * If this is the first touch, bind double tap
+					 * interval.
+					 */
+					if (knob._touchCount == 0) {
+						
+						/*
+						 * This is executed when the double tap
+						 * interval times out.
+						 */
+						var f = function() {
+							
+							/*
+							 * If control was tapped exactly
+							 * twice, enable on-screen keyboard.
+							 */
+							if (knob._touchCount == 2) {
+								var properties = knob._properties;
+								var readonly = properties.readonly;
+							
+								/*
+								 * If knob is not read-only,
+								 * display input element.
+								 */
+								if (!readonly) {
+									e.preventDefault();
+									var inputDiv = knob._inputDiv;
+									inputDiv.style.display = 'block';
+									var inputElem = knob._input;
+									inputElem.focus();
+									knob.redraw();
+								}
+								
+							}
+							
+							knob._touchCount = 0;
+						};
+						
+						var timeout = knob._timeoutDoubleTap;
+						window.clearTimeout(timeout);
+						timeout = window.setTimeout(f, 500);
+						knob._timeoutDoubleTap = timeout;
+					}
+					
+					knob._touchCount++;
 					var val = touchEventToValue(e, properties);
 					knob.setValueFloating(val);
 				}
@@ -926,9 +978,12 @@ function PureKnob() {
 			 */
 			if (btn) {
 				knob.abort();
-				knob._mousebutton = false;
+				knob._touchCount = 0;
+				var timeout = knob._timeoutDoubleTap;
+				window.clearTimeout(timeout);
 			}
 			
+			knob._mousebutton = false;
 		};
 		
 		/*
