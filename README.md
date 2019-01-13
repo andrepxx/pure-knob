@@ -61,8 +61,11 @@ Properties
 - `angleOffset`: Offset in radians, relative to the positive x-axis.
 - `colorBG`: Color of the knob track.
 - `colorFG`: Color of the knob gauge / indicator.
+- `fnStringToValue`: Function turning a string into a (numeric) value. (Check the "custom formatting" section below for more information.)
+- `fnValueToString`: Function turning a (numeric) value into a string. (Check the "custom formatting" section below for more information.)
 - `needle`: Boolean indicating whether we should use a simple marker / needle instead of a filling gauge to indicate value along the knob's track.
 - `readonly`: Boolean indicating whether the value of the knob is write-protected and thus not editable by the user. Useful for displaying values without allowing them to get edited.
+- `textScale`: Linear scaling factor for increasing / decreasing the font size. (`1.0` is default font size.)
 - `trackWidth`: Width of the track, relative to the average radius of the knob.
 - `valMin`: Minimum selectable value.
 - `valMax`: Maximum selectable value.
@@ -75,6 +78,77 @@ Events / Actions
 - Pulling mouse / touch outside the element before release restores back to old value.
 - Double click or middle click enables entry of value via keyboard.
 - When keyboard entry is enabled, use arrow keys to navigate cursor, backspace or `Del` to delete character before / after cursor, `ESC` to restore old value and disable keyboard entry, `Enter`/`Return` to commit new value and disable keyboard entry.
+
+Custom formatting
+-----------------
+
+You may provide a set of two *JavaScript* functions and set them as the `fnStringToValue` and `fnValueToString` properties, respectively, to support custom formatting of your numbers, for example to support fractional parts and / or custom units. Note that this is an advanced feature, which is not required for basic functionality of the knob.
+
+The function provided in the `fnValueToString` property is called when the knob needs to obtain a string representation from an integer value. This is usually the case when the knob needs to get rendered. A single argument is passed into the function, which is the integer value, for which the string representation should be obtained. The function must generate and return the string representation to the knob.
+
+On the other hand, the function provided in the `fnStringToValue` property is called when the knob needs to obtain an integer value from a string representation. This is usually the case after the user entered and committed a new value for the knob via the (physical or on-screen) keyboard. A single argument is passed into the function, which is the string representation, for which the integer value should be obtained. The function must generate and return the integer value to the knob.
+
+The default implementation of both functions is as follows.
+
+```javascript
+knob.setProperty('fnStringToValue', function(string) { return parseInt(string); });
+knob.setProperty('fnValueToString', function(value) { return value.toString(); });
+```
+
+We will now provide a more complicated example, which uses a knob control with a value range from `0` to `1000` (both inclusive), but displays it as a fractional percentage value with one decimal place between `0.0 %` and `100.0 %`. The relative font size has to be reduced in order for the relatively long string `100.0 %` to fit inside the control.
+
+```javascript
+knob.setProperty('valMin', 0);
+knob.setProperty('valMax', 1000);
+knob.setProperty('textScale', 0.75);
+
+/*
+ * Function for converting integer value to string for display.
+ */
+knob.setProperty('fnValueToString', function(value) {
+	var string = value.toString();
+	var n = string.length;
+	
+	/*
+	 * If value is just a single digit, add leading zero.
+	 */
+	if (n < 2) {
+		string = '0' + string;
+		n += 1;
+	}
+	
+	var prefix = string.slice(0, n - 1);
+	var suffix = string.slice(n - 1, n);
+	var result = prefix + '.' + suffix + ' %';
+	return result;
+});
+
+/*
+ * Function for converting string entered by user to integer value.
+ */
+knob.setProperty('fnStringToValue', function(string) {
+	var val = 0;
+	var numerals = string.match(/\d*(\.\d*)?/);
+	
+	/*
+	 * Ensure that numerals are non-null.
+	 */
+	if (numerals !== null) {
+		
+		/*
+		 * Check if we found a numeral.
+		 */
+		if (numerals.length > 0) {
+			var numeral = numerals[0];
+			var f = parseFloat(numeral);
+			val = Math.floor(10.0 * f);
+		}
+		
+	}
+	
+	return val;
+});
+```
 
 Example for bar graph control
 -----------------------------
@@ -124,3 +198,4 @@ Properties
 - `val`: Default value. (Do not edit directly! Use `setValue(...)` to set this.)
 
 There is also a small sample provided for the bar graph control in the `index.xhtml` file.
+
