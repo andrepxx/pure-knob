@@ -141,7 +141,7 @@ knob.setProperty('fnStringToValue', function(string) {
 		if (numerals.length > 0) {
 			var numeral = numerals[0];
 			var f = parseFloat(numeral);
-			val = Math.floor(10.0 * f);
+			val = Math.round(10.0 * f);
 		}
 		
 	}
