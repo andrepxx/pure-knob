@@ -156,15 +156,16 @@ function PureKnob() {
 					/*
 					 * Draw the markers.
 					 */
+
+					ctx.lineCap = 'butt';
+					ctx.lineWidth = '2';
+					ctx.strokeStyle = colorMarkers;
 					for (let v = markerStart; v <= markerEnd; v += markerStep) {
 						const relativePos = (v - valMin) / (valMax - valMin),
 							  pos = Math.round(width * relativePos);
 						ctx.beginPath();
 						ctx.moveTo(pos, 0);
 						ctx.lineTo(pos, height);
-						ctx.lineCap = 'butt';
-						ctx.lineWidth = '2';
-						ctx.strokeStyle = colorMarkers;
 						ctx.stroke();
 					}
 
@@ -189,6 +190,7 @@ function PureKnob() {
 				/*
 				 * Draw the peaks.
 				 */
+				ctx.strokeStyle = colorFilling;
 				for (let i = 0; i < numPeaks; i++) {
 					const peak = peaks[i],
 						  relativePeak = (peak - valMin) / (valMax - valMin),
@@ -196,9 +198,6 @@ function PureKnob() {
 					ctx.beginPath();
 					ctx.moveTo(pos, lineTop);
 					ctx.lineTo(pos, lineBottom);
-					ctx.lineCap = 'butt';
-					ctx.lineWidth = '2';
-					ctx.strokeStyle = colorFilling;
 					ctx.stroke();
 				}
 
