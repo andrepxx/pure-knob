@@ -110,7 +110,7 @@ knob.setProperty('textScale', 0.75);
 knob.setProperty('fnValueToString', function(value) {
 	let string = value.toString();
 	let n = string.length;
-	
+
 	/*
 	 * If value is just a single digit, add leading zero.
 	 */
@@ -118,7 +118,7 @@ knob.setProperty('fnValueToString', function(value) {
 		string = '0' + string;
 		n += 1;
 	}
-	
+
 	const prefix = string.slice(0, n - 1);
 	const suffix = string.slice(n - 1, n);
 	const result = prefix + '.' + suffix + ' %';
@@ -131,12 +131,12 @@ knob.setProperty('fnValueToString', function(value) {
 knob.setProperty('fnStringToValue', function(string) {
 	let val = 0;
 	const numerals = string.match(/\d*(\.\d*)?/);
-	
+
 	/*
 	 * Ensure that numerals are non-null.
 	 */
 	if (numerals !== null) {
-		
+
 		/*
 		 * Check if we found a numeral.
 		 */
@@ -145,9 +145,9 @@ knob.setProperty('fnStringToValue', function(string) {
 			const f = parseFloat(numeral);
 			val = Math.round(10.0 * f);
 		}
-		
+
 	}
-	
+
 	return val;
 });
 ```

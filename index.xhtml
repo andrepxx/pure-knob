@@ -8,14 +8,14 @@
 		<script src="pureknob.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			// <![CDATA[
-			
+
 			/*
 			 * Demo code for knob element.
 			 */
 			function demoKnob() {
 				// Create knob element, 300 x 300 px in size.
 				var knob = pureknob.createKnob(300, 300);
-				
+
 				// Set properties.
 				knob.setProperty('angleStart', -0.75 * Math.PI);
 				knob.setProperty('angleEnd', 0.75 * Math.PI);
@@ -23,10 +23,10 @@
 				knob.setProperty('trackWidth', 0.4);
 				knob.setProperty('valMin', 0);
 				knob.setProperty('valMax', 100);
-				
+
 				// Set initial value.
 				knob.setValue(50);
-				
+
 				/*
 				 * Event listener.
 				 *
@@ -40,17 +40,17 @@
 				var listener = function(knob, value) {
 					console.log(value);
 				};
-				
+
 				knob.addListener(listener);
-				
+
 				// Create element node.
 				var node = knob.node();
-				
+
 				// Add it to the DOM.
 				var elem = document.getElementById('some_element');
 				elem.appendChild(node);
 			}
-			
+
 			/*
 			 * Demo code for bar graph element.
 			 */
@@ -69,13 +69,13 @@
 				var node = graph.node();
 				body.appendChild(node);
 				window.graph = graph;
-				
+
 				/*
 				 * This is executed on each timer tick.
 				 */
 				var t = function(e) {
 					var v = graph.getValue();
-					
+
 					/*
 					 * As long as value is greater than -80, decrement it.
 					 */
@@ -83,12 +83,12 @@
 						v--;
 						graph.setValue(v);
 					}
-					
+
 				};
 
 				window.setInterval(t, 200);
 			}
-			
+
 			/*
 			 * This is executed after the document finished loading.
 			 */
