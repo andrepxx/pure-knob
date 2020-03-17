@@ -14,7 +14,7 @@
 			 */
 			function demoKnob() {
 				// Create knob element, 300 x 300 px in size.
-				var knob = pureknob.createKnob(300, 300);
+				const knob = pureknob.createKnob(300, 300);
 
 				// Set properties.
 				knob.setProperty('angleStart', -0.75 * Math.PI);
@@ -37,17 +37,17 @@
 				 * Parameter 'value' is the value which was set
 				 * by the user.
 				 */
-				var listener = function(knob, value) {
+				const listener = function(knob, value) {
 					console.log(value);
 				};
 
 				knob.addListener(listener);
 
 				// Create element node.
-				var node = knob.node();
+				const node = knob.node();
 
 				// Add it to the DOM.
-				var elem = document.getElementById('some_element');
+				const elem = document.getElementById('some_element');
 				elem.appendChild(node);
 			}
 
@@ -55,8 +55,8 @@
 			 * Demo code for bar graph element.
 			 */
 			function demoBarGraph() {
-				var body = document.getElementsByTagName('body')[0];
-				var graph = pureknob.createBarGraph(400, 40);
+				const body = document.getElementsByTagName('body')[0];
+				const graph = pureknob.createBarGraph(400, 40);
 				graph.setProperty('colorFG', '#44ff44');
 				graph.setProperty('colorMarkers', '#ffffff');
 				graph.setProperty('markerStart', -60);
@@ -66,15 +66,15 @@
 				graph.setProperty('valMax', 0);
 				graph.setValue(-25);
 				graph.setPeaks([-18]);
-				var node = graph.node();
+				const node = graph.node();
 				body.appendChild(node);
 				window.graph = graph;
 
 				/*
 				 * This is executed on each timer tick.
 				 */
-				var t = function(e) {
-					var v = graph.getValue();
+				const t = function(e) {
+					let v = graph.getValue();
 
 					/*
 					 * As long as value is greater than -80, decrement it.
