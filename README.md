@@ -16,7 +16,7 @@ Example for knob control
 
 ```javascript
 // Create knob element, 300 x 300 px in size.
-var knob = pureknob.createKnob(300, 300);
+const knob = pureknob.createKnob(300, 300);
 
 // Set properties.
 knob.setProperty('angleStart', -0.75 * Math.PI);
@@ -39,17 +39,17 @@ knob.setValue(50);
  * Parameter 'value' is the value which was set
  * by the user.
  */
-var listener = function(knob, value) {
+const listener = function(knob, value) {
 	console.log(value);
 };
 
 knob.addListener(listener);
 
 // Create element node.
-var node = knob.node();
+const node = knob.node();
 
 // Add it to the DOM.
-var elem = document.getElementById('some_element');
+const elem = document.getElementById('some_element');
 elem.appendChild(node);
 ```
 
@@ -108,8 +108,8 @@ knob.setProperty('textScale', 0.75);
  * Function for converting integer value to string for display.
  */
 knob.setProperty('fnValueToString', function(value) {
-	var string = value.toString();
-	var n = string.length;
+	let string = value.toString();
+	let n = string.length;
 	
 	/*
 	 * If value is just a single digit, add leading zero.
@@ -119,9 +119,9 @@ knob.setProperty('fnValueToString', function(value) {
 		n += 1;
 	}
 	
-	var prefix = string.slice(0, n - 1);
-	var suffix = string.slice(n - 1, n);
-	var result = prefix + '.' + suffix + ' %';
+	const prefix = string.slice(0, n - 1);
+	const suffix = string.slice(n - 1, n);
+	const result = prefix + '.' + suffix + ' %';
 	return result;
 });
 
@@ -129,8 +129,8 @@ knob.setProperty('fnValueToString', function(value) {
  * Function for converting string entered by user to integer value.
  */
 knob.setProperty('fnStringToValue', function(string) {
-	var val = 0;
-	var numerals = string.match(/\d*(\.\d*)?/);
+	let val = 0;
+	const numerals = string.match(/\d*(\.\d*)?/);
 	
 	/*
 	 * Ensure that numerals are non-null.
@@ -141,8 +141,8 @@ knob.setProperty('fnStringToValue', function(string) {
 		 * Check if we found a numeral.
 		 */
 		if (numerals.length > 0) {
-			var numeral = numerals[0];
-			var f = parseFloat(numeral);
+			const numeral = numerals[0];
+			const f = parseFloat(numeral);
 			val = Math.round(10.0 * f);
 		}
 		
@@ -157,7 +157,7 @@ Example for bar graph control
 
 ```javascript
 // Create bar graph element, 400 x 40 px in size.
-var graph = pureknob.createBarGraph(400, 40);
+const graph = pureknob.createBarGraph(400, 40);
 
 // Set properties.
 graph.setProperty('colorFG', '#88ff88');
@@ -175,10 +175,10 @@ graph.setValue(50);
 graph.setPeaks([75]);
 
 // Create element node.
-var node = graph.node();
+const node = graph.node();
 
 // Add it to the DOM.
-var elem = document.getElementById('some_element');
+const elem = document.getElementById('some_element');
 elem.appendChild(node);
 ```
 
