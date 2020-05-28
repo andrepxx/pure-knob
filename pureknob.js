@@ -32,7 +32,7 @@
      module.exports = factory();
    } else {
      // Browser globals (root is window)
-     root.pureKnob = factory();
+     root.pureknob = factory();
    }
  }(typeof self !== 'undefined' ? self : this, function () {
    // Just return a value to define the module export.
