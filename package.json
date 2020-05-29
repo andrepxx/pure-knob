@@ -1,22 +1,28 @@
 {
-  "name": "pure-knob",
-  "version": "1.0.0",
-  "description": "Initially a (circular) knob / dial control with mouse, wheel, touch and keyboard support, implemented in pure JavaScript.",
-  "main": "pureknob.js",
-  "directories": {
-    "doc": "doc"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/andrepxx/pure-knob.git"
-  },
-  "author": "Andre Plötze",
-  "license": "Apache 2.0",
-  "bugs": {
-    "url": "https://github.com/andrepxx/pure-knob/issues"
-  },
-  "homepage": "https://github.com/andrepxx/pure-knob#readme"
+	"name": "pure-knob",
+	"version": "1.0.0",
+	"description": "Initially a (circular) knob / dial control with mouse, wheel, touch and keyboard support, implemented in pure JavaScript.",
+	"main": "pureknob.js",
+
+	"directories": {
+		"doc": "doc"
+	},
+
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/andrepxx/pure-knob.git"
+	},
+
+	"author": "Andre Plötze",
+	"license": "Apache 2.0",
+
+	"bugs": {
+		"url": "https://github.com/andrepxx/pure-knob/issues"
+	},
+
+	"homepage": "https://github.com/andrepxx/pure-knob#readme"
 }
