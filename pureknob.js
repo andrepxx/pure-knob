@@ -668,9 +668,6 @@
 			 */
 			const touchEventToValue = function(e, properties) {
 				const canvas = e.target;
-				const rect = canvas.getBoundingClientRect();
-				const offsetX = rect.left;
-				const offsetY = rect.top;
 				const width = canvas.scrollWidth;
 				const height = canvas.scrollHeight;
 				const centerX = 0.5 * width;
@@ -687,15 +684,29 @@
 
 				let x = 0.0;
 				let y = 0.0;
+				
+				let touchX = 0.0;
+				let touchY = 0.0;
 
 				/*
 				 * If a touch was extracted, calculate coordinates relative to
 				 * the element position.
 				 */
 				if (touch !== null) {
-					const touchX = touch.pageX;
+					var offsetX = 0;
+                    			var offsetY = 0;
+                                        
+                    			var element = canvas;
+
+					while (element) {
+						offsetX += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+						offsetY += (element.offsetTop - element.scrollTop + element.clientTop);
+						element = element.offsetParent;
+					}
+					
+					touchX = touch.pageX;
 					x = touchX - offsetX;
-					const touchY = touch.pageY;
+					touchY = touch.pageY;
 					y = touchY - offsetY;
 				}
 
