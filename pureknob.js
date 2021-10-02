@@ -229,10 +229,13 @@
 				 */
 				'resize': function() {
 					const canvas = this._canvas;
-					canvas.style.height = '100%';
-					canvas.style.width = '100%';
-					canvas.height = this._height;
-					canvas.width = this._width;
+					const ctx = canvas.getContext('2d');
+					const scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
+					canvas.style.height = this._height + 'px';
+					canvas.style.width = this._width + 'px';
+					canvas.height = Math.floor(this._height * scale);
+					canvas.width = Math.floor(this._width * scale);
+					ctx.scale(scale, scale);
 				},
 
 				/*
@@ -570,10 +573,13 @@
 				 */
 				'resize': function() {
 					const canvas = this._canvas;
-					canvas.style.height = '100%';
-					canvas.style.width = '100%';
-					canvas.height = this._height;
-					canvas.width = this._width;
+					const ctx = canvas.getContext('2d');
+					const scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
+					canvas.style.height = this._height + 'px';
+					canvas.style.width = this._width + 'px';
+					canvas.height = Math.floor(this._height * scale);
+					canvas.width = Math.floor(this._width * scale);
+					ctx.scale(scale, scale);
 				},
 
 				/*
