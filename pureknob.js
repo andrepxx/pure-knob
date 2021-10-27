@@ -63,32 +63,32 @@
 			 * The bar graph object.
 			 */
 			const graph = {
-				'_canvas': canvas,
-				'_div': div,
-				'_height': height,
-				'_width': width,
+				_canvas: canvas,
+				_div: div,
+				_height: height,
+				_width: width,
 
 				/*
 				 * Properties of this bar graph.
 				 */
-				'_properties': {
-					'colorBG': '#181818',
-					'colorFG': '#ff8800',
-					'colorMarkers': '#888888',
-					'markerStart': 0,
-					'markerEnd': 100,
-					'markerStep': 20,
-					'trackWidth': 0.5,
-					'valMin': 0,
-					'valMax': 100,
-					'valPeaks': [],
-					'val': 0
+				_properties: {
+					colorBG: '#181818',
+					colorFG: '#ff8800',
+					colorMarkers: '#888888',
+					markerStart: 0,
+					markerEnd: 100,
+					markerStep: 20,
+					trackWidth: 0.5,
+					valMin: 0,
+					valMax: 100,
+					valPeaks: [],
+					val: 0
 				},
 
 				/*
 				 * Returns the peak values for this bar graph.
 				 */
-				'getPeaks': function() {
+				getPeaks: function() {
 					const properties = this._properties;
 					const peaks = properties.valPeaks;
 					const numPeaks = peaks.length;
@@ -108,7 +108,7 @@
 				/*
 				 * Returns the value of a property of this bar graph.
 				 */
-				'getProperty': function(key) {
+				getProperty: function(key) {
 					const properties = this._properties;
 					const value = properties[key];
 					return value;
@@ -117,7 +117,7 @@
 				/*
 				 * Returns the current value of the bar graph.
 				 */
-				'getValue': function() {
+				getValue: function() {
 					const properties = this._properties;
 					const value = properties.val;
 					return value;
@@ -126,7 +126,7 @@
 				/*
 				 * Return the DOM node representing this bar graph.
 				 */
-				'node': function() {
+				node: function() {
 					const div = this._div;
 					return div;
 				},
@@ -134,7 +134,7 @@
 				/*
 				 * Redraw the bar graph on the canvas.
 				 */
-				'redraw': function() {
+				redraw: function() {
 					this.resize();
 					const properties = this._properties;
 					const colorTrack = properties.colorBG;
@@ -227,7 +227,7 @@
 				/*
 				 * This is called as the canvas or the surrounding DIV is resized.
 				 */
-				'resize': function() {
+				resize: function() {
 					const canvas = this._canvas;
 					const ctx = canvas.getContext('2d');
 					const scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
@@ -241,7 +241,7 @@
 				/*
 				 * Sets the peak values of this bar graph.
 				 */
-				'setPeaks': function(peaks) {
+				setPeaks: function(peaks) {
 					const properties = this._properties;
 					const peaksCopy = [];
 					const numPeaks = peaks.length;
@@ -260,7 +260,7 @@
 				/*
 				 * Sets the value of a property of this bar graph.
 				 */
-				'setProperty': function(key, value) {
+				setProperty: function(key, value) {
 					this._properties[key] = value;
 					this.redraw();
 				},
@@ -268,7 +268,7 @@
 				/*
 				 * Sets the value of this bar graph.
 				 */
-				'setValue': function(value) {
+				setValue: function(value) {
 					const properties = this._properties;
 					const valMin = properties.valMin;
 					const valMax = properties.valMax;
@@ -296,6 +296,7 @@
 			};
 
 			canvas.addEventListener('resize', resizeListener);
+			window.addEventListener('resize', resizeListener);
 			return graph;
 		}
 
@@ -349,23 +350,23 @@
 			 * The knob object.
 			 */
 			const knob = {
-				'_canvas': canvas,
-				'_div': div,
-				'_height': height,
-				'_input': input,
-				'_inputDiv': inputDiv,
-				'_listeners': [],
-				'_mousebutton': false,
-				'_previousVal': 0,
-				'_timeout': null,
-				'_timeoutDoubleTap': null,
-				'_touchCount': 0,
-				'_width': width,
+				_canvas: canvas,
+				_div: div,
+				_height: height,
+				_input: input,
+				_inputDiv: inputDiv,
+				_listeners: [],
+				_mousebutton: false,
+				_previousVal: 0,
+				_timeout: null,
+				_timeoutDoubleTap: null,
+				_touchCount: 0,
+				_width: width,
 
 				/*
 				 * Notify listeners about value changes.
 				 */
-				'_notifyUpdate': function() {
+				_notifyUpdate: function() {
 					const properties = this._properties;
 					const value = properties.val;
 					const listeners = this._listeners;
@@ -391,29 +392,29 @@
 				/*
 				 * Properties of this knob.
 				 */
-				'_properties': {
-					'angleEnd': 2.0 * Math.PI,
-					'angleOffset': -0.5 * Math.PI,
-					'angleStart': 0,
-					'colorBG': '#181818',
-					'colorFG': '#ff8800',
-					'colorLabel': '#ffffff',
-					'fnStringToValue': function(string) { return parseInt(string); },
-					'fnValueToString': function(value) { return value.toString(); },
-					'label': null,
-					'needle': false,
-					'readonly': false,
-					'textScale': 1.0,
-					'trackWidth': 0.4,
-					'valMin': 0,
-					'valMax': 100,
-					'val': 0
+				_properties: {
+					angleEnd: 2.0 * Math.PI,
+					angleOffset: -0.5 * Math.PI,
+					angleStart: 0,
+					colorBG: '#181818',
+					colorFG: '#ff8800',
+					colorLabel: '#ffffff',
+					fnStringToValue: function(string) { return parseInt(string); },
+					fnValueToString: function(value) { return value.toString(); },
+					label: null,
+					needle: false,
+					readonly: false,
+					textScale: 1.0,
+					trackWidth: 0.4,
+					valMin: 0,
+					valMax: 100,
+					val: 0
 				},
 
 				/*
 				 * Abort value change, restoring the previous value.
 				 */
-				'abort': function() {
+				abort: function() {
 					const previousValue = this._previousVal;
 					const properties = this._properties;
 					properties.val = previousValue;
@@ -423,7 +424,7 @@
 				/*
 				 * Adds an event listener.
 				 */
-				'addListener': function(listener) {
+				addListener: function(listener) {
 					const listeners = this._listeners;
 					listeners.push(listener);
 				},
@@ -431,7 +432,7 @@
 				/*
 				 * Commit value, indicating that it is no longer temporary.
 				 */
-				'commit': function() {
+				commit: function() {
 					const properties = this._properties;
 					const value = properties.val;
 					this._previousVal = value;
@@ -442,7 +443,7 @@
 				/*
 				 * Returns the value of a property of this knob.
 				 */
-				'getProperty': function(key) {
+				getProperty: function(key) {
 					const properties = this._properties;
 					const value = properties[key];
 					return value;
@@ -451,7 +452,7 @@
 				/*
 				 * Returns the current value of the knob.
 				 */
-				'getValue': function() {
+				getValue: function() {
 					const properties = this._properties;
 					const value = properties.val;
 					return value;
@@ -460,7 +461,7 @@
 				/*
 				 * Return the DOM node representing this knob.
 				 */
-				'node': function() {
+				node: function() {
 					const div = this._div;
 					return div;
 				},
@@ -468,7 +469,7 @@
 				/*
 				 * Redraw the knob on the canvas.
 				 */
-				'redraw': function() {
+				redraw: function() {
 					this.resize();
 					const properties = this._properties;
 					const needle = properties.needle;
@@ -571,7 +572,7 @@
 				/*
 				 * This is called as the canvas or the surrounding DIV is resized.
 				 */
-				'resize': function() {
+				resize: function() {
 					const canvas = this._canvas;
 					const ctx = canvas.getContext('2d');
 					const scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
@@ -585,7 +586,7 @@
 				/*
 				 * Sets the value of a property of this knob.
 				 */
-				'setProperty': function(key, value) {
+				setProperty: function(key, value) {
 					this._properties[key] = value;
 					this.redraw();
 				},
@@ -593,7 +594,7 @@
 				/*
 				 * Sets the value of this knob.
 				 */
-				'setValue': function(value) {
+				setValue: function(value) {
 					this.setValueFloating(value);
 					this.commit();
 				},
@@ -601,7 +602,7 @@
 				/*
 				 * Sets floating (temporary) value of this knob.
 				 */
-				'setValueFloating': function(value) {
+				setValueFloating: function(value) {
 					const properties = this._properties;
 					const valMin = properties.valMin;
 					const valMax = properties.valMax;
@@ -1132,6 +1133,7 @@
 			canvas.addEventListener('mousemove', mouseMoveListener);
 			canvas.addEventListener('mouseup', mouseUpListener);
 			canvas.addEventListener('resize', resizeListener);
+			window.addEventListener('resize', resizeListener);
 			canvas.addEventListener('touchstart', touchStartListener);
 			canvas.addEventListener('touchmove', touchMoveListener);
 			canvas.addEventListener('touchend', touchEndListener);
@@ -1145,4 +1147,3 @@
 
 	return new PureKnob();
 }));
-
