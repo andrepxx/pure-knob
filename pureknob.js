@@ -296,6 +296,7 @@
 			};
 
 			canvas.addEventListener('resize', resizeListener);
+			window.addEventListener('resize', resizeListener);
 			return graph;
 		}
 
@@ -1131,7 +1132,8 @@
 			canvas.addEventListener('mouseleave', mouseCancelListener);
 			canvas.addEventListener('mousemove', mouseMoveListener);
 			canvas.addEventListener('mouseup', mouseUpListener);
-			canvas.addEventListener('resize', resizeListener);
+			canvas.addEventListener('resize', resizeListener);			
+			window.addEventListener('resize', resizeListener);
 			canvas.addEventListener('touchstart', touchStartListener);
 			canvas.addEventListener('touchmove', touchMoveListener);
 			canvas.addEventListener('touchend', touchEndListener);
